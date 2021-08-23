@@ -83,10 +83,4 @@ class LeilaoDaoTest {
 
     }
 
-
-    private Leilao criarLeilao(Usuario usuario){
-        Leilao leilao = new Leilao("Mochila", new BigDecimal("70"), LocalDate.now(), usuario);
-        return leilao;
-    }
-
 }
