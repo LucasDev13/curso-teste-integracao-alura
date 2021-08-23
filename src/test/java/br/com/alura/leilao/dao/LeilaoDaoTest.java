@@ -3,6 +3,8 @@ package br.com.alura.leilao.dao;
 import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.model.Usuario;
 import br.com.alura.leilao.util.JPAUtil;
+import br.com.alura.leilao.util.builder.LeilaoBuilder;
+import br.com.alura.leilao.util.builder.UsuarioBuilder;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,8 +34,19 @@ class LeilaoDaoTest {
 
     @Test
     void deveriaCadastrarUmLeilao(){
-        Usuario usuario = criarUsuario();
-        Leilao leilao = criarLeilao(usuario);
+        Usuario usuario = new UsuarioBuilder()
+                .comNome("Fulano")
+                .comEmail("fulano@email.com")
+                .comSenha("1233456789")
+                .criar();
+        manager.persist(usuario);
+
+        Leilao leilao = new LeilaoBuilder()
+                .comNome("Mochila")
+                .comValorInicial("500")
+                .comData(LocalDate.now())
+                .comUsuario(usuario)
+                .criar();
 
         leilao = leilaoDao.salvar(leilao);
         Leilao salvo = leilaoDao.buscarPorId(leilao.getId());
@@ -43,8 +56,19 @@ class LeilaoDaoTest {
 
     @Test
     void deveriaAtualizarUmLeilao(){
-        Usuario usuario = criarUsuario();
-        Leilao leilao = criarLeilao(usuario);
+        Usuario usuario = new UsuarioBuilder()
+                .comNome("Fulano")
+                .comEmail("fulano@email.com")
+                .comSenha("1233456789")
+                .criar();
+        manager.persist(usuario);
+
+        Leilao leilao = new LeilaoBuilder()
+                .comNome("Mochila")
+                .comValorInicial("500")
+                .comData(LocalDate.now())
+                .comUsuario(usuario)
+                .criar();
 
         leilao = leilaoDao.salvar(leilao);
 
@@ -59,11 +83,6 @@ class LeilaoDaoTest {
 
     }
 
-    private Usuario criarUsuario(){
-        Usuario usuario = new Usuario("fulano", "fulano@email.com", "12345678");
-        manager.persist(usuario);
-        return usuario;
-    }
 
     private Leilao criarLeilao(Usuario usuario){
         Leilao leilao = new Leilao("Mochila", new BigDecimal("70"), LocalDate.now(), usuario);
